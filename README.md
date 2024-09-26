@@ -11,3 +11,5 @@
 2. 將程式放進『Cloud Functions』
 
 3. 增加『Cloud Scheduler』，設定執行作業為『Pub/Sub』，主題要使用剛剛建好的
+
+### 記得要放 line token 上 GCP 
