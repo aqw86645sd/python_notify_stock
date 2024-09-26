@@ -1,0 +1,12 @@
+class Config:
+    LINE_TOKEN_FILE = "token/line_token"
+    # stock info
+    VOO_ETF_SYMBOL = "VOO"
+    PERIOD_LENGTH = "100d"
+    NUM_STOCKS_TO_CHECK = 50
+    TIMEZONE_OFFSET = 8
+    # 策略參數
+    STRATEGY_1_PRICE_LIMIT = 4
+    STRATEGY_1_VOLUME_LIMIT = 2
+    STRATEGY_2_SHORT_MA_PERIOD = 5
+    STRATEGY_2_LONG_MA_PERIOD = 20
