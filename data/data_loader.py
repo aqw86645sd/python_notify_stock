@@ -1,8 +1,10 @@
-import yfinance as yf
-import requests
 import re
 
-class StockData:
+import requests
+import yfinance as yf
+
+
+class DataLoader:
     def __init__(self, config):
         self.config = config
 

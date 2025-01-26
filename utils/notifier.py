@@ -1,12 +1,14 @@
-import os
 import datetime
-import requests
+import os
+
 import mplfinance as mpf
+import requests
+
 
 class Notifier:
     def __init__(self, config):
         self.config = config
-        self.line_token = open(self.config.LINE_TOKEN_FILE, "r").read()
+        self.line_token = config.LINE_TOKEN
         self.chart_fig = 'chart.png'
 
     def send(self, ticker, strategy_results, price_data):
@@ -18,7 +20,6 @@ class Notifier:
         kwargs = dict(type='candle', mav=(5, 20, 60), volume=True, title=ticker + ' stock', style=s)
 
         mpf.plot(price_data, **kwargs, savefig=self.chart_fig)
-
 
         if self.is_chart_generated():
             self.line_notify_message(notify_message)

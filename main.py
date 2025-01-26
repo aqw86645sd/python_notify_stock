@@ -1,20 +1,20 @@
 from config import Config
-from stock_data import StockData
-from strategies import Strategy1, Strategy2
-from notifier import Notifier
+from data.data_loader import DataLoader
+from strategies.strategies import Strategy1, Strategy2
+from utils.notifier import Notifier
 
 
 class Entrance:
-    def __init__(self, stock_data, strategies, notifier):
-        self.stock_data = stock_data
+    def __init__(self, data_loader, strategies, notifier):
+        self.data_loader = data_loader
         self.strategies = strategies
         self.notifier = notifier
 
     def run(self):
-        stock_list = self.stock_data.get_etf_ticker_list()
+        stock_list = self.data_loader.get_etf_ticker_list()
 
         for ticker in stock_list[:Config.NUM_STOCKS_TO_CHECK]:
-            price_data = self.stock_data.get_stock_data(ticker)
+            price_data = self.data_loader.get_stock_data(ticker)
             strategy_results = []
 
             for strategy in self.strategies:
@@ -27,9 +27,9 @@ class Entrance:
 
 if __name__ == '__main__':
     config = Config()
-    stock_data = StockData(config)
+    data_loader = DataLoader(config)
     strategies = [Strategy1(config), Strategy2(config)]
     notifier = Notifier(config)
 
-    app = Entrance(stock_data, strategies, notifier)
+    app = Entrance(data_loader, strategies, notifier)
     app.run()
