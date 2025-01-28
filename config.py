@@ -9,10 +9,11 @@ class Config:
     NEWS_TOKEN = open(NEWS_API_KEY_FILE_PATH, "r").read()
 
     # stock info
-    VOO_ETF_SYMBOL = "VOO"
-    PERIOD_LENGTH = "100d"
+    ETF_SYMBOL = "VOO"
+    PERIOD_LENGTH = "180d"
     NUM_STOCKS_TO_CHECK = 50
     TIMEZONE_OFFSET = 8
+
     # 策略參數
     STRATEGY_1_PRICE_LIMIT = 4
     STRATEGY_1_VOLUME_LIMIT = 2
