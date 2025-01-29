@@ -1,12 +1,14 @@
 import os
-from pathlib import Path
+
+from dotenv import load_dotenv
+
 
 class Config:
-    PROJECT_ROOT = Path(__file__).resolve().parent
-    LINE_TOKEN_FILE_PATH = os.path.join(PROJECT_ROOT, "token/line_token")
-    NEWS_API_KEY_FILE_PATH = os.path.join(PROJECT_ROOT, "token/news_api_key")
-    LINE_TOKEN = open(LINE_TOKEN_FILE_PATH, "r").read()
-    NEWS_TOKEN = open(NEWS_API_KEY_FILE_PATH, "r").read()
+    # 加载 .env 文件
+    load_dotenv()
+
+    LINE_TOKEN = os.getenv("LINE_TOKEN")
+    NEWS_TOKEN = os.getenv("NEWS_API_TOKEN")
 
     # stock info
     ETF_SYMBOL = "VOO"
