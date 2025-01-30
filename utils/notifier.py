@@ -6,10 +6,21 @@ import requests
 
 
 class Notifier:
-    def __init__(self, config):
-        self.config = config
-        self.line_token = config.LINE_TOKEN
+    def __init__(self, class_config):
+        self.config = class_config
+        self.line_token = class_config.LINE_TOKEN
         self.chart_fig = 'chart.png'
+
+    def line_notify_message_text(self, msg):
+
+        headers = {
+            "Authorization": "Bearer " + self.line_token,
+            "Content-Type": "application/x-www-form-urlencoded"
+        }
+
+        payload = {'message': msg}
+        r = requests.post("https://notify-api.line.me/api/notify", headers=headers, params=payload)
+        return r.status_code
 
     def send(self, ticker, strategy_results, price_data):
         """ 發送通知 """

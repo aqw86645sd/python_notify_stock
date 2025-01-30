@@ -1,8 +1,8 @@
 from statistics import mean
 
 class Strategy1:
-    def __init__(self, config):
-        self.config = config
+    def __init__(self, class_config):
+        self.config = class_config
 
     def check(self, data):
         """ 檢查策略1是否符合條件 """

@@ -5,10 +5,10 @@ from utils.notifier import Notifier
 
 
 class Entrance:
-    def __init__(self, data_loader, strategies, notifier):
-        self.data_loader = data_loader
-        self.strategies = strategies
-        self.notifier = notifier
+    def __init__(self, class_data_loader, class_strategies, class_notifier):
+        self.data_loader = class_data_loader
+        self.strategies = class_strategies
+        self.notifier = class_notifier
 
     def run(self):
         stock_list = self.data_loader.get_etf_ticker_list()
@@ -27,9 +27,9 @@ class Entrance:
 
 if __name__ == '__main__':
     config = Config()
-    data_loader = DataLoader(config)
-    strategies = [Strategy1(config), Strategy2(config)]
     notifier = Notifier(config)
+    data_loader = DataLoader(config, notifier)
+    strategies = [Strategy1(config), Strategy2(config)]
 
     app = Entrance(data_loader, strategies, notifier)
     app.run()

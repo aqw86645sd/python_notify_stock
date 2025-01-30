@@ -7,8 +7,8 @@ from config import Config
 
 
 class NewsAPI:
-    def __init__(self, config):
-        self.api_token = config.NEWS_TOKEN
+    def __init__(self, class_config):
+        self.api_token = class_config.NEWS_TOKEN
 
     def get_news(self, ticker):
         date = self.get_new_york_date()
