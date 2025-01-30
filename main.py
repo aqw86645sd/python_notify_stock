@@ -15,11 +15,10 @@ class Entrance:
 
         for ticker in stock_list[:Config.NUM_STOCKS_TO_CHECK]:
             price_data = self.data_loader.get_stock_data(ticker)
-            strategy_results = []
 
-            for strategy in self.strategies:
-                if strategy.check(price_data):
-                    strategy_results.append(strategy.result(price_data))
+            strategy_results = [
+                msg for strategy in self.strategies if (msg := strategy.exec(price_data))
+            ]
 
             if strategy_results:
                 self.notifier.send(ticker, strategy_results, price_data)
