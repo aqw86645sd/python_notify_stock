@@ -15,17 +15,14 @@ class NewsAPI:
 
         newsapi = NewsApiClient(api_key=self.api_token)
 
-        # /v2/top-headlines
-        all_articles = newsapi.get_everything(q=ticker,
-                                              sources='bbc-news,the-verge',
-                                              domains='bbc.co.uk,techcrunch.com',
-                                              from_param=date,
-                                              to=date,
-                                              language='en',
-                                              sort_by='publishedAt',
-                                              page=2)
+        articles = newsapi.get_everything(
+            q='AAPL',
+            from_param=date,
+            sort_by='publishedAt'
+        )
 
-        print(all_articles)
+        print(articles)
+
 
     @staticmethod
     def get_new_york_date():
