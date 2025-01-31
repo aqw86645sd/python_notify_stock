@@ -13,7 +13,7 @@ class Config:
     # stock info
     ETF_SYMBOL = "VOO"
     PERIOD_LENGTH = "180d"
-    NUM_STOCKS_TO_CHECK = 50
+    NUM_STOCKS_TO_CHECK = 20
     TIMEZONE_OFFSET = 8
 
     # 策略參數
