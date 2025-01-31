@@ -1,62 +1,61 @@
-import datetime
-import os
-
-import mplfinance as mpf
 import requests
+
+from config import Config
+from utils.chart_generator import ChartGenerator
+from utils.time_helper import TimeHelper
 
 
 class Notifier:
-    def __init__(self, class_config):
-        self.config = class_config
-        self.line_token = class_config.LINE_TOKEN
-        self.chart_fig = 'chart.png'
+    """負責發送 LINE Notify 通知"""
+
+    def __init__(self, config, class_time_helper, class_chart_generator):
+        self.config = config
+        self.line_token = config.LINE_TOKEN
+        self.time_helper = class_time_helper
+        self.chart_generator = class_chart_generator
 
     def line_notify_message_text(self, msg):
-
+        """發送純文字通知"""
         headers = {
             "Authorization": "Bearer " + self.line_token,
             "Content-Type": "application/x-www-form-urlencoded"
         }
-
         payload = {'message': msg}
         r = requests.post("https://notify-api.line.me/api/notify", headers=headers, params=payload)
         return r.status_code
 
     def send(self, ticker, strategy_results, price_data):
-        """ 發送通知 """
+        """發送通知，包括文字與圖表"""
         notify_message = self.format_message(ticker, strategy_results)
+        self.chart_generator.generate_chart(ticker, price_data)
 
-        mc = mpf.make_marketcolors(up='r', down='g', inherit=True)
-        s = mpf.make_mpf_style(base_mpf_style='yahoo', marketcolors=mc)
-        kwargs = dict(type='candle', mav=(5, 20, 60), volume=True, title=ticker + ' stock', style=s)
-
-        mpf.plot(price_data, **kwargs, savefig=self.chart_fig)
-
-        if self.is_chart_generated():
+        if self.chart_generator.is_chart_generated():
             self.line_notify_message(notify_message)
-            os.remove('./' + self.chart_fig)  # 確保圖片存在後再刪除
+            self.chart_generator.remove_chart()
         else:
             print("Warning: Chart not found, skipping image attachment.")
 
     def format_message(self, ticker, strategy_results):
-        """ 格式化訊息 """
-        now = self.get_timezone(self.config.TIMEZONE_OFFSET)
+        """格式化通知訊息"""
+        now = self.time_helper.get_timezone(self.config.TIMEZONE_OFFSET)
         strategy_text = "\n".join(strategy_results)
         return f"{now}\n{ticker}：{strategy_text}"
 
     def line_notify_message(self, msg):
+        """發送帶圖片的通知"""
         url = 'https://notify-api.line.me/api/notify'
         headers = {"Authorization": "Bearer " + self.line_token}
         data = {'message': msg}
-        image = open('./' + self.chart_fig, 'rb')
-        image_file = {'imageFile': image}
-        requests.post(url, headers=headers, data=data, files=image_file)
 
-    def is_chart_generated(self):
-        """ 檢查圖表文件是否存在 """
-        return os.path.exists(self.chart_fig)
+        with open(self.chart_generator.chart_fig, 'rb') as image:
+            image_file = {'imageFile': image}
+            requests.post(url, headers=headers, data=data, files=image_file)
 
-    @staticmethod
-    def get_timezone(offset):
-        gmt = datetime.timezone(datetime.timedelta(hours=offset))
-        return datetime.datetime.now(tz=gmt).strftime('%Y/%m/%d %H:%M:%S')
+
+if __name__ == "__main__":
+    config = Config()
+    time_helper = TimeHelper()
+    chart_generator = ChartGenerator()
+    notifier = Notifier(config, time_helper, chart_generator)
+
+    notifier.line_notify_message_text("test")

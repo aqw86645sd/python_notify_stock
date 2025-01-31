@@ -1,7 +1,9 @@
 from config import Config
 from data.data_loader import DataLoader
 from strategies.strategies import Strategy1, Strategy2
+from utils.chart_generator import ChartGenerator
 from utils.notifier import Notifier
+from utils.time_helper import TimeHelper
 
 
 class Entrance:
@@ -26,7 +28,9 @@ class Entrance:
 
 if __name__ == '__main__':
     config = Config()
-    notifier = Notifier(config)
+    time_helper = TimeHelper()
+    chart_generator = ChartGenerator()
+    notifier = Notifier(config, time_helper, chart_generator)
     data_loader = DataLoader(config, notifier)
     strategies = [Strategy1(config), Strategy2(config)]
 
